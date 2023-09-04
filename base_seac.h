@@ -57,7 +57,7 @@ int delete_file(int numero){
     return erreur;
 }
 
-
+//lit dans fichier
 int read_file(int numero,int offset,int count,char *destination){
     int erreur = 0;
     asm volatile("mov $0x04, %%al\n"
@@ -68,13 +68,25 @@ int read_file(int numero,int offset,int count,char *destination){
     return erreur;
 }
 
-
+//ecrire dans fichier
 int write_file(int numero,int offset,int count,char *source){
     int erreur = 0;
     asm volatile("mov $0x05, %%al\n"
                  "int $0x64\n"
     	         : "=eax"(erreur)
                  : "ebx"(numero),"ecx"(count),"edx"(offset),"eS"(source)
+                 : );
+    return erreur;
+}
+
+//lire taille du fichier
+int write_file(int numero){
+    int erreur = 0;
+    int taille= 0;
+    asm volatile("mov $0x05, %%ax\n"
+                 "int $0x64\n"
+    	         : "=eax"(erreur)
+                 : "ebx"(numero),"edx"(&taille)
                  : );
     return erreur;
 }
@@ -120,6 +132,28 @@ static void delay(int millis){
 
 }
 
+// récupère argument par son numéros
+int arg_num(char numero,char *string){
+    int erreur = 0;
+    asm volatile ("mov $0x04, %%al\n"
+                  "mov $0x00, %%cl\n"
+    		  "int   $0x61\n"
+    	          : "=eax"(erreur)
+                  : "ah"(numero),"edx"(string)
+                  : "cl");
+   return erreur;
+}
 
+// récupère argument par sa lettre
+int arg_lettre(char lettre,char *string){
+    int erreur = 0;
+    asm volatile ("mov $0x05, %%al\n"
+                  "mov $0x00, %%cl\n"
+    		  "int $0x61\n"
+    	          : "=eax"(erreur)
+                  : "ah"(lettre),"edx"(string)
+                  :"cl");
+   return erreur;
+}
 
 
