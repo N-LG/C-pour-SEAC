@@ -145,5 +145,90 @@ int rechercheS(unsigned char service,unsigned char *table,unsigned char taille){
     return erreur;
 }
 
+//lit le compteur de temps
+long compteur(){
+    long lsb;
+    long msb;
+    asm volatile ("mov   $0x0C, %%al\n"
+                  "int   $0x61\n"
+                  :"=eax"(lsb),"=ebx"(msb)
+                  :/*aucunes entrées*/
+                  :);
+    return lsb;
+}
+
+//lire un message systeme
+void message_systeme(int num,char* chaine){
+    asm volatile ("mov   $0x000D, %%ax\n"
+                  "mov   $0, %%ch\n"
+                  "int   $0x61\n"
+                  :"=edx"(chaine),"=cl"(num)
+                  :/*aucunes entrées*/
+                  :);   
+}
+
+//lire un message d'erreur
+void message_erreur(int num,char* chaine){
+    asm volatile ("mov   $0x010D, %%ax\n"
+                  "mov   $0, %%ch\n"
+                  "int   $0x61\n"
+                  :"=edx"(chaine),"=cl"(num)
+                  :/*aucunes entrées*/
+                  :);   
+}
+
+//lire journal systeme
+void lire_journal(char* chaine,long taille){
+    asm volatile ("mov   $0x0E, %%al\n"
+                  "int   $0x61\n"
+                  :/*pas de sortie*/
+                  :"edx"(chaine),"ecx"(taille)
+                  :);   
+}
+
+//copier des données dans le presse papier
+void ecrire_pp(char* chaine,long taille){
+    asm volatile ("mov   $0x0F, %%al\n"
+                  "int   $0x61\n"
+                  :/*pas de sortie*/
+                  :"edx"(chaine),"ecx"(taille)
+                  :);   
+}
 
 
+//lire les donnés dans le presse papier
+void lire_pp(char* chaine,long taille){
+    asm volatile ("mov   $0x10, %%al\n"
+                  "int   $0x61\n"
+                  :/*pas de sortie*/
+                  :"edx"(chaine),"ecx"(taille)
+                  :);   
+}
+
+//effacer le contenu du presse papier
+void effacer_pp(){
+     asm volatile ("mov   $0x11, %%al\n"
+    		  "int   $0x61\n"
+    	          :/*pas de sortie*/
+                  :/*pas d'entrée*/
+                  :);
+
+}
+
+//lire l'adresse du dossier de travail
+void lire_dossier_travail(char* chaine){
+    asm volatile ("mov   $0x12, %%al\n"
+                  "int   $0x61\n"
+                  :/*pas de sortie*/
+                  :"edx"(chaine)
+                  :);   
+}
+
+//lire l'adresse du dossier de travail
+void lire_dossier_travail(char* chaine,char nb){
+    asm volatile ("mov   $0x13, %%al\n"
+                  "int   $0x61\n"
+                  :/*pas de sortie*/
+                  :"edx"(chaine),"cl"(nb)
+                  :);   
+}
