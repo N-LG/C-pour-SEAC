@@ -28,8 +28,8 @@ void raf(){
 
 #include "seac_vid.h"    //fonctions d'interfaces homme machine
 #include "seac_fich.h"   //fonctions de manipulation de fichier et de disques 
-//#include "seac_com.h"    //fonctions de communication inter taches
-//#include "seac_port.h"   //fonctions de manipulation de port série et parallèle
+#include "seac_com.h"    //fonctions de communication inter taches
+#include "seac_port.h"   //fonctions de manipulation de port série et parallèle
 //#include "seac_usb.h"    //fonctions de manipulation de périphériques usb
 
 

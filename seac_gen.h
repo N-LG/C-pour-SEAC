@@ -13,7 +13,7 @@ struct dateheure {
 //fonctions générales
 
 //envoie une commande au systeme
-void command(char *commande){
+void cmd(char *commande){
     asm volatile ("mov $0x00, %%al\n"
                   "int   $0x61\n"
     	          : 
@@ -23,7 +23,7 @@ void command(char *commande){
 
 
 //attend x millisecondes
-static void delay(int millis){
+void delay(int millis){
     asm volatile ("mov $10, %%eax\n"
                   "xor %%edx, %%edx\n"
                   "mul %%ecx\n"
@@ -40,8 +40,8 @@ static void delay(int millis){
 
 
 //récupère l'ID de la tache
-int id_tache(){
-    int id = 0;
+unsigned int id_tache(){
+    unsigned int id = 0;
     asm volatile ("mov $0x02, %%al\n"
                   "int   $0x61\n"
     	          :"=bx"(id)
@@ -52,17 +52,19 @@ int id_tache(){
 
 
 //recupère la commande
-int commande(char *string){
+unsigned long arg_tot(char *string){
+    unsigned long erreur = 0;
     asm volatile ("mov $0x00, %%al\n"
                   "int   $0x61\n"
     	          : 
                   :"edx"(string)
                   :"eax");
+   return erreur;
 }
 
 // récupère argument par son numéros
-int arg_num(char numero,char *string){
-    int erreur = 0;
+long arg_num(char numero,char *string){
+    unsigned long erreur = 0;
     asm volatile ("mov $0x04, %%al\n"
                   "mov $0x00, %%cl\n"
     		  "int   $0x61\n"
@@ -73,8 +75,8 @@ int arg_num(char numero,char *string){
 }
 
 // récupère argument par sa lettre
-int arg_lettre(char lettre,char *string){
-    int erreur = 0;
+long arg_lettre(char lettre,char *string){
+    long erreur = 0;
     asm volatile ("mov $0x05, %%al\n"
                   "mov $0x00, %%cl\n"
     		  "int $0x61\n"
@@ -85,7 +87,7 @@ int arg_lettre(char lettre,char *string){
 }
 
 //affiche du texte dans le journal
-static void printJ(char *string){
+void printJ(char *string){
     asm volatile ("mov   $0x06, %%al\n"
                   "int   $0x61\n"
                   :/* no output */
@@ -94,7 +96,7 @@ static void printJ(char *string){
 }
 
 //modifie le descripteur de tache
-static void printD(char *string){
+void printD(char *string){
     asm volatile ("mov   $0x07, %%al\n"
                   "int   $0x61\n"
                   : /* no output */
@@ -103,7 +105,7 @@ static void printD(char *string){
 }
 
 //change la taille de la mémoire
-int changeT(int taille){
+long changeT(long taille){
     long erreur = 0;
     asm volatile ("mov $0x08, %%al\n"
                   "mov $0x47,%%dx\n"
@@ -135,8 +137,8 @@ void changeS(unsigned char service){
 }
 
 //cherche service
-int rechercheS(unsigned char service,unsigned char *table,unsigned char taille){
-    int erreur = 0;
+unsigned long rechercheS(unsigned char service,unsigned char *table,unsigned char taille){
+    unsigned long erreur = 0;
     asm volatile ("mov   $0x0B, %%al\n"
                   "int   $0x61\n"
                   :
