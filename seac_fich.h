@@ -86,7 +86,7 @@ long write_file(long numero,long offset,long count,char *source){
 //lire taille du fichier
 long taille_file(long numero){
     long erreur = 0;
-    long[2] taille= 0;
+    long taille[2];
     asm volatile("mov $0x05, %%ax\n"
                  "int $0x64\n"
     	         :"=eax"(erreur)

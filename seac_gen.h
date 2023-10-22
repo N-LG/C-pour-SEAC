@@ -23,7 +23,7 @@ void cmd(char *commande){
 
 
 //attend x millisecondes
-void delay(int millis){
+void delay(unsigned long millis){
     asm volatile ("mov $10, %%eax\n"
                   "xor %%edx, %%edx\n"
                   "mul %%ecx\n"
@@ -137,7 +137,7 @@ void changeS(unsigned char service){
 }
 
 //cherche service
-unsigned long rechercheS(unsigned char service,unsigned char *table,unsigned char taille){
+unsigned long rechercheS(unsigned char service,unsigned int *table,unsigned char taille){
     unsigned long erreur = 0;
     asm volatile ("mov   $0x0B, %%al\n"
                   "int   $0x61\n"
@@ -227,7 +227,7 @@ void lire_dossier_travail(char* chaine){
 }
 
 //lire l'adresse du dossier de travail
-void lire_dossier_travail(char* chaine,char nb){
+void sous_taches(int* chaine,char nb){
     asm volatile ("mov   $0x13, %%al\n"
                   "int   $0x61\n"
                   :/*pas de sortie*/
